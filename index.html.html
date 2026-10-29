@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSTC | Digital Notice Board</title>
+<style>
+:root{--navy:#071a35;--blue:#1459b8;--sky:#55c7ff;--gold:#ffc857;--ink:#14233d;--muted:#64748b;--paper:#f4f8ff;--white:#fff;--line:#dce6f3;--green:#18a874}
+*{box-sizing:border-box}html{scroll-behavior:smooth;height:100%;overflow:hidden}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--paper);color:var(--ink);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.topbar{background:#06142b;color:white;padding:12px 4vw;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--sky),#3477ff);display:grid;place-items:center;color:#06142b;font-weight:900;font-size:20px;box-shadow:0 5px 18px #55c7ff35}.brand h1{font-size:17px;margin:0;letter-spacing:.8px}.brand p{margin:4px 0 0;font-size:11px;color:#b8c9e5;letter-spacing:1.7px}
+.top-actions{display:flex;gap:9px;align-items:center}.clock{font-variant-numeric:tabular-nums;color:#d8e8ff;font-weight:700;margin-right:8px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-1px)}.btn-blue{background:#1c67d7;color:white}.btn-light{background:white;color:#17365f}.btn-gold{background:var(--gold);color:#18243a}.btn-outline{background:transparent;border:1px solid #bfd2ef;color:#24456f}
+.hero{background:radial-gradient(ellipse at 85% 15%,#1b65b7 0,transparent 38%),linear-gradient(115deg,#081a36,#0e2e59 70%,#10417a);color:white;padding:clamp(18px,2.3vh,34px) 4vw 22px;position:relative;overflow:hidden;flex:0 0 auto}
+.hero:after{content:"SSTC";position:absolute;right:3vw;bottom:-40px;font-size:clamp(100px,20vw,260px);font-weight:1000;color:#ffffff08;letter-spacing:-12px;pointer-events:none}
+.hero-inner{max-width:1500px;margin:auto;position:relative;z-index:1;display:grid;grid-template-columns:1.4fr .8fr;gap:28px;align-items:center}
+.eyebrow{color:var(--sky);font-weight:800;text-transform:uppercase;letter-spacing:2px;font-size:12px;display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px #18a87422}
+.hero h2{font-size:clamp(32px,5vw,66px);line-height:1.03;margin:15px 0 13px;letter-spacing:-1.8px;max-width:850px}.hero h2 span{color:var(--gold)}.hero p{font-size:clamp(14px,1.5vw,18px);line-height:1.65;color:#d3e2f7;max-width:690px;margin:0}
+.hero-card{background:#ffffff12;border:1px solid #ffffff25;border-radius:20px;padding:22px;backdrop-filter:blur(8px);box-shadow:0 15px 40px #00112c35}.hero-card .label{color:#b8d4f7;text-transform:uppercase;font-size:11px;letter-spacing:1.5px;font-weight:800}.hero-card h3{font-size:22px;margin:12px 0 7px}.hero-card p{font-size:14px;color:#dceaff}.hero-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800;background:#ffffff14;color:#eaf4ff;border:1px solid #ffffff1c}.pill.gold{background:#ffc857;color:#1d2c42;border:0}
+main{max-width:1500px;margin:0 auto;padding:clamp(14px,2vh,26px) 4vw 18px;width:100%;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:17px}.section-head h2{font-size:clamp(22px,2.5vw,31px);margin:0;letter-spacing:-.6px}.section-head p{color:var(--muted);margin:6px 0 0;font-size:14px}.small-link{color:var(--blue);font-weight:800;font-size:13px;text-decoration:none}
+.notice-grid{display:flex;gap:16px;overflow:hidden;min-height:0;flex:1;align-items:stretch}.notice{flex:0 0 calc((100% - 32px)/3);min-width:0;transition:opacity .45s,transform .45s}.notice-grid .notice.slide-hidden{display:none}.notice{background:white;border:1px solid var(--line);border-radius:17px;padding:20px;box-shadow:0 8px 24px #19385c08;display:flex;flex-direction:column;min-height:210px;position:relative;overflow:hidden}.notice:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}.notice.urgent:before{background:#e74c64}.notice.event:before{background:#e5a817}.notice-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.tag{font-size:10px;text-transform:uppercase;letter-spacing:.8px;font-weight:900;color:#1758ad;background:#e9f2ff;border-radius:6px;padding:6px 8px}.tag.red{color:#b62c43;background:#ffedf0}.tag.gold{color:#875e00;background:#fff5d7}.date{font-size:11px;color:#7b8ba1;font-weight:700}.notice h3{font-size:19px;line-height:1.25;margin:16px 0 8px}.notice p{font-size:13px;line-height:1.65;color:#62728a;margin:0 0 17px}.notice-foot{margin-top:auto;padding-top:10px;border-top:1px solid #edf1f7;display:flex;justify-content:space-between;align-items:center;color:#7b8ba1;font-size:11px}.arrow{font-size:18px;color:var(--blue)}
+.lower-grid{display:none}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:22px}.panel h2{font-size:21px;margin:0 0 5px}.panel-sub{font-size:13px;color:var(--muted);margin:0 0 18px}.event-list{display:grid;gap:12px}.event-row{display:flex;align-items:center;gap:13px;padding:12px;border:1px solid #e8eef7;border-radius:13px}.event-date{width:52px;min-width:52px;text-align:center;background:#edf5ff;border-radius:10px;padding:8px 3px;color:#1556a8}.event-date b{font-size:18px;display:block}.event-date span{font-size:10px;font-weight:900;letter-spacing:1px}.event-row h3{font-size:14px;margin:0 0 4px}.event-row p{font-size:12px;color:var(--muted);margin:0}.event-row .event-arrow{margin-left:auto;color:#2c67b7;font-size:19px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{background:linear-gradient(135deg,#f0f6ff,#fbfdff);border:1px solid #e0eafa;border-radius:14px;padding:17px}.stat .icon{font-size:22px}.stat strong{display:block;font-size:25px;margin:10px 0 3px;color:#123e7c}.stat span{font-size:12px;color:#6b7b92}.club-note{margin-top:14px;border-radius:14px;background:#0d2a51;color:white;padding:17px}.club-note strong{font-size:14px}.club-note p{color:#d2e1f7;font-size:12px;line-height:1.6;margin:7px 0 0}
+footer{background:#06142b;color:#d9e7fa;padding:12px 4vw;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;flex:0 0 auto}.footer-brand{font-weight:850;letter-spacing:.5px}.footer-muted{font-size:12px;color:#9fb4d3;margin-top:5px}.footer-right{font-size:12px;color:#a9bdd9;text-align:right}
+.admin-badge{position:fixed;bottom:18px;right:18px;z-index:10;box-shadow:0 8px 25px #06142b40}
+dialog{border:0;border-radius:18px;padding:0;width:min(620px,calc(100% - 28px));box-shadow:0 24px 90px #00132e55;color:var(--ink)}dialog::backdrop{background:#06142b9c;backdrop-filter:blur(4px)}.modal-head{padding:20px 22px;background:#0d2a51;color:white;display:flex;justify-content:space-between;align-items:center}.modal-head h2{font-size:20px;margin:0}.close{background:#ffffff20;color:white;border:0;border-radius:8px;padding:7px 10px;cursor:pointer}.modal-body{padding:22px;max-height:70vh;overflow:auto}.field{display:grid;gap:6px;margin-bottom:14px}.field label{font-size:12px;font-weight:850;color:#415574}.field input,.field textarea,.field select{width:100%;border:1px solid #cedbed;border-radius:10px;padding:11px;font:inherit;font-size:14px;background:#fbfdff}.field textarea{min-height:95px;resize:vertical}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.admin-help{background:#fff5d7;color:#755200;border-radius:10px;padding:12px;font-size:12px;line-height:1.6;margin-bottom:16px}
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#103e2e;color:white;padding:12px 18px;border-radius:10px;box-shadow:0 10px 25px #0002;z-index:20;display:none;font-weight:700;font-size:13px}
+body.tv-mode .topbar .top-actions,body.tv-mode .admin-badge,body.tv-mode footer .footer-right{display:none}body.tv-mode main{max-width:none;padding:1.6vh 4vw 1vh}body.tv-mode .hero{padding:1.8vh 4vw}body.tv-mode .notice{min-height:0;padding:1.5vw;flex-basis:calc((100% - 2.4vw)/3)}body.tv-mode .notice h3{font-size:clamp(20px,2vw,32px)}body.tv-mode .notice p{font-size:clamp(13px,1.1vw,18px)}body.tv-mode .notice-grid{gap:1.2vw}body.tv-mode .hero h2{font-size:clamp(38px,4.5vw,72px)}body.tv-mode .lower-grid{display:none}body.tv-mode .section-head{margin-bottom:1vh}body.tv-mode .notice-foot{padding-top:7px}
+@media(max-width:850px){.hero-inner{grid-template-columns:1fr;gap:12px}.hero-card{display:none}.hero h2{font-size:clamp(26px,4vh,48px);margin:8px 0}.hero p{font-size:13px}.notice{flex-basis:calc((100% - 16px)/2)}.clock{display:none}}
+@media(max-width:560px){.notice{flex-basis:100%}.section-head{align-items:start;flex-direction:row;margin-bottom:10px}.section-head p{font-size:11px}.form-row{grid-template-columns:1fr}.brand h1{font-size:12px}.brand p{font-size:9px}.logo{width:36px;height:36px}.topbar{padding:8px 4vw}.top-actions .btn{padding:8px;font-size:11px}.hero h2{letter-spacing:-.8px}.hero p{display:none}.hero{padding:12px 4vw}.eyebrow{font-size:10px}.notice{padding:14px}.notice h3{font-size:17px}.notice p{font-size:12px;line-height:1.45}.notice-foot{font-size:10px}footer{padding:8px 4vw}.footer-muted,.footer-right{display:none}}
+@media print{.top-actions,.admin-badge{display:none!important}body{background:white}.hero{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* One-screen digital signage layout */
+html, body { height:100%; }
+body { height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+.topbar { flex:0 0 auto; padding-top:9px; padding-bottom:9px; }
+.hero { flex:0 0 auto; padding-top:clamp(18px,2.2vh,30px); padding-bottom:clamp(18px,2.2vh,30px); }
+.hero-inner { grid-template-columns:1.45fr .75fr; gap:22px; }
+.hero h2 { font-size:clamp(30px,3.4vw,52px); margin:10px 0; }
+.hero p { font-size:clamp(12px,1vw,15px); line-height:1.45; }
+.hero-card { padding:16px 18px; }
+.hero-card h3 { font-size:clamp(16px,1.5vw,22px); margin:8px 0 5px; }
+.hero-card p { font-size:12px; }
+main { width:100%; flex:1 1 auto; min-height:0; overflow:hidden; padding-top:clamp(12px,1.5vh,20px); padding-bottom:12px; display:flex; flex-direction:column; }
+main > section:first-child { min-height:0; display:flex; flex-direction:column; flex:1 1 auto; }
+.section-head { flex:0 0 auto; margin-bottom:10px; }
+.section-head h2 { font-size:clamp(20px,2vw,27px); }
+.section-head p { margin-top:3px; }
+.notice-grid { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:2px 5px 10px 2px; align-content:start; scrollbar-width:thin; scrollbar-color:#8db8e9 #e7eef8; }
+.notice { min-height:clamp(145px,17vh,210px); padding:clamp(12px,1.2vw,19px); }
+.notice h3 { font-size:clamp(15px,1.35vw,20px); margin:11px 0 6px; }
+.notice p { font-size:clamp(11px,.95vw,13px); line-height:1.45; margin-bottom:10px; }
+.notice-foot { padding-top:7px; }
+.lower-grid, footer { display:none !important; }
+.notice-grid::-webkit-scrollbar { width:8px; }
+.notice-grid::-webkit-scrollbar-track { background:#e7eef8; border-radius:8px; }
+.notice-grid::-webkit-scrollbar-thumb { background:#8db8e9; border-radius:8px; }
+@media(max-width:850px) {
+ .hero-inner { grid-template-columns:1fr .8fr; }
+ .hero-card { padding:12px; }
+ .notice-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:560px) {
+ .topbar { gap:8px; }
+ .top-actions { gap:5px; }
+ .top-actions .btn { padding:8px; font-size:11px; }
+ .brand .logo { width:36px; height:36px; }
+ .brand h1 { font-size:11px; }
+ .brand p { font-size:8px; letter-spacing:1px; }
+ .hero-inner { grid-template-columns:1fr; }
+ .hero-card { display:none; }
+ .hero h2 { font-size:29px; }
+ .notice-grid { grid-template-columns:1fr; }
+}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">S</div><div><h1>SSTC DIGITAL NOTICE BOARD</h1><p>STUDENT SUPPORT TECHNICAL CLUB</p></div></div>
+  <div class="top-actions"><span class="clock" id="clock">--:--</span><button class="btn btn-light" onclick="toggleTV()">▣ TV display</button><button class="btn btn-gold" onclick="openAdmin()">✚ Manage notices</button></div>
+</header>
+<section class="hero">
+  <div class="hero-inner">
+    <div><div class="eyebrow"><span class="dot"></span> School announcements • Live board</div><h2>Stay curious.<br><span>Stay connected.</span></h2><p>Your central place for school announcements, upcoming activities, important reminders and SSTC Club updates.</p></div>
+    <div class="hero-card"><div class="label">★ Featured announcement</div><h3 id="featuredTitle">Welcome to the SSTC Digital Notice Board</h3><p id="featuredText">Check this board regularly for the latest school updates, events and important information.</p><div class="hero-meta"><span class="pill gold" id="featuredTag">WELCOME</span><span class="pill">Updated <span id="featuredDate">Today</span></span></div></div>
+  </div>
+</section>
+<main>
+  <section>
+    <div class="section-head"><div><h2>Latest notices</h2><p>Important updates at a glance.</p></div><a href="#events" class="small-link">View upcoming events ↓</a></div>
+    <div class="notice-grid" id="noticeGrid"></div>
+  </section>
+  <section class="lower-grid" id="events">
+    <div class="panel"><h2>Upcoming events</h2><p class="panel-sub">Mark your calendar and be ready.</p><div class="event-list" id="eventList"></div></div>
+    <div class="panel"><h2>Inside SSTC</h2><p class="panel-sub">Learn, create, collaborate and share.</p><div class="stats"><div class="stat"><div class="icon">💡</div><strong>Ideas</strong><span>Think creatively</span></div><div class="stat"><div class="icon">🛠️</div><strong>Projects</strong><span>Build and explore</span></div><div class="stat"><div class="icon">🤝</div><strong>Teamwork</strong><span>Learn together</span></div><div class="stat"><div class="icon">🚀</div><strong>Innovation</strong><span>Try something new</span></div></div><div class="club-note"><strong>Have a question or an idea?</strong><p>Share it with your teacher or the SSTC Club team. This notice board is here to keep everyone informed.</p></div></div>
+  </section>
+</main>
+<footer><div><div class="footer-brand">SSTC · Student Support Technical Club</div><div class="footer-muted">A smarter way to stay informed.</div></div><div class="footer-right">Please confirm important dates with your school.<br><span id="footerYear"></span> · Digital Notice Board</div></footer>
+<button class="btn btn-blue admin-badge" onclick="openAdmin()">⚙ Manage</button>
+<div class="toast" id="toast"></div>
+<dialog id="adminDialog">
+  <div class="modal-head"><h2>Manage notice board</h2><button class="close" onclick="closeAdmin()">✕</button></div>
+  <div class="modal-body">
+    <div class="admin-help"><b>Demo mode:</b> Changes save in this browser on this device. To sync edits from your computer to a Fire TV in another location, the published website needs a shared online database or CMS.</div>
+    <form id="noticeForm">
+      <div class="field"><label for="title">Notice title</label><input id="title" required maxlength="100" placeholder="e.g. Science exhibition registration"></div>
+      <div class="field"><label for="description">Details</label><textarea id="description" required maxlength="500" placeholder="Write the important information..."></textarea></div>
+      <div class="form-row"><div class="field"><label for="category">Category</label><select id="category"><option>Announcement</option><option>Event</option><option>Exam</option><option>Urgent</option><option>SSTC Club</option></select></div><div class="field"><label for="date">Date / deadline</label><input id="date" type="date"></div></div>
+      <div class="form-row"><div class="field"><label for="featured">Feature on top?</label><select id="featured"><option value="no">No</option><option value="yes">Yes</option></select></div><div class="field"><label for="eventDate">Event day (optional)</label><input id="eventDate" type="date"></div></div>
+      <div class="modal-actions"><button class="btn btn-blue" type="submit">Save notice</button><button class="btn btn-outline" type="button" onclick="clearForm()">Clear form</button><button class="btn btn-outline" type="button" onclick="resetDemo()">Reset sample notices</button></div>
+    </form>
+    <hr style="border:0;border-top:1px solid #e3ebf5;margin:22px 0">
+    <h3 style="margin:0 0 12px">Current notices</h3><div id="adminList"></div>
+  </div>
+</dialog>
+<script>
+const initialNotices = [
+ {id:1,title:"Welcome to the SSTC Digital Notice Board",description:"Check this board regularly for the latest school updates, events and important information.",category:"SSTC Club",date:"",featured:true,eventDate:""},
+ {id:2,title:"School announcements",description:"Please read new school announcements carefully and follow the instructions shared by your teachers.",category:"Announcement",date:"",featured:false,eventDate:""},
+ {id:3,title:"Stay ready for upcoming events",description:"Keep an eye on this board for event dates, registration details and participation guidelines.",category:"Event",date:"",featured:false,eventDate:""},
+ {id:4,title:"Exam and timetable updates",description:"Check with your class teacher for confirmed examination dates, room details and timetable changes.",category:"Exam",date:"",featured:false,eventDate:""},
+ {id:5,title:"Share your SSTC ideas",description:"Have an idea for a technical project or club activity? Talk to the SSTC Club team and help turn it into something useful.",category:"SSTC Club",date:"",featured:false,eventDate:""}
+];
+let notices = loadNotices();
+function loadNotices(){try{const saved=localStorage.getItem("sstc-notices-v1");return saved?JSON.parse(saved):initialNotices.map(n=>({...n}));}catch(e){return initialNotices.map(n=>({...n}));}}
+function save(){localStorage.setItem("sstc-notices-v1",JSON.stringify(notices));render();showToast("Notice board updated on this device.");}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function fmtDate(s){if(!s)return "General";const d=new Date(s+"T12:00:00");return d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});}
+function tagClass(c){return c==="Urgent"?"red":c==="Event"||c==="Exam"?"gold":"";}
+function render(){
+ const featured=notices.find(n=>n.featured)||notices[0];
+ document.getElementById("featuredTitle").textContent=featured?featured.title:"Welcome to the SSTC Digital Notice Board";
+ document.getElementById("featuredText").textContent=featured?featured.description:"Add a notice using Manage notices.";
+ document.getElementById("featuredTag").textContent=featured?featured.category.toUpperCase():"WELCOME";
+ document.getElementById("featuredDate").textContent=featured&&featured.date?fmtDate(featured.date):"Today";
+ const grid=document.getElementById("noticeGrid");
+ const others=notices.filter(n=>!featured||n.id!==featured.id).slice(0,6);
+ grid.innerHTML=others.map(n=>`<article class="notice ${n.category==="Urgent"?"urgent":n.category==="Event"||n.category==="Exam"?"event":""}"><div class="notice-top"><span class="tag ${tagClass(n.category)}">${esc(n.category)}</span><span class="date">${esc(fmtDate(n.date))}</span></div><h3>${esc(n.title)}</h3><p>${esc(n.description)}</p><div class="notice-foot"><span>${n.eventDate?"Event: "+esc(fmtDate(n.eventDate)):"SSTC Notice Board"}</span><span class="arrow">↗</span></div></article>`).join("");
+ if(!others.length)grid.innerHTML='<div class="notice" style="flex-basis:100%">No additional notices yet. Open <b>Manage notices</b> to add one.</div>';slideIndex=0;
+ const events=notices.filter(n=>n.eventDate).sort((a,b)=>a.eventDate.localeCompare(b.eventDate));
+ document.getElementById("eventList").innerHTML=events.length?events.slice(0,5).map(n=>{const d=new Date(n.eventDate+"T12:00:00");return `<div class="event-row"><div class="event-date"><b>${d.toLocaleDateString(undefined,{day:"2-digit"})}</b><span>${d.toLocaleDateString(undefined,{month:"short"}).toUpperCase()}</span></div><div><h3>${esc(n.title)}</h3><p>${esc(n.category)} · ${esc(fmtDate(n.eventDate))}</p></div><span class="event-arrow">›</span></div>`}).join(""):'<p style="color:#718198;font-size:13px">No dated events added yet. Add an event date when creating a notice.</p>';
+ document.getElementById("adminList").innerHTML=notices.map(n=>`<div style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #edf1f7"><div style="min-width:0"><b style="font-size:13px">${esc(n.title)}</b><div style="font-size:11px;color:#718198;margin-top:4px">${esc(n.category)}${n.featured?" · Featured":""}</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-outline" style="padding:7px 9px" onclick="editNotice(${n.id})">Edit</button><button class="btn btn-outline" style="padding:7px 9px;color:#b62c43" onclick="deleteNotice(${n.id})">Delete</button></div></div>`).join("")||'<p>No notices yet.</p>';
+}
+let editingId=null;
+let slideIndex=0;
+function rotateNotices(){
+ const cards=[...document.querySelectorAll("#noticeGrid .notice")];
+ if(cards.length<=3){cards.forEach(c=>c.classList.remove("slide-hidden"));return;}
+ cards.forEach((c,i)=>c.classList.toggle("slide-hidden", !(i>=slideIndex && i<slideIndex+3)));
+ slideIndex=(slideIndex+3)%cards.length;
+}
+
+function openAdmin(){document.getElementById("adminDialog").showModal();render();}
+function closeAdmin(){document.getElementById("adminDialog").close();}
+function clearForm(){editingId=null;document.getElementById("noticeForm").reset();document.querySelector('#noticeForm button[type="submit"]').textContent="Save notice";}
+function editNotice(id){const n=notices.find(x=>x.id===id);if(!n)return;editingId=id;for(const k of ["title","description","category","date","eventDate"])document.getElementById(k).value=n[k]||"";document.getElementById("featured").value=n.featured?"yes":"no";document.querySelector('#noticeForm button[type="submit"]').textContent="Update notice";document.getElementById("title").focus();}
+function deleteNotice(id){if(!confirm("Delete this notice?"))return;notices=notices.filter(n=>n.id!==id);if(!notices.some(n=>n.featured)&&notices.length)notices[0].featured=true;save();}
+function resetDemo(){if(!confirm("Restore the sample notices? This replaces your current local notices."))return;notices=initialNotices.map(n=>({...n}));save();clearForm();}
+document.getElementById("noticeForm").addEventListener("submit",e=>{e.preventDefault();const n={id:editingId||Date.now(),title:document.getElementById("title").value.trim(),description:document.getElementById("description").value.trim(),category:document.getElementById("category").value,date:document.getElementById("date").value,eventDate:document.getElementById("eventDate").value,featured:document.getElementById("featured").value==="yes"};if(n.featured)notices.forEach(x=>x.featured=false);if(editingId){notices=notices.map(x=>x.id===editingId?n:x);}else{notices.unshift(n);}save();clearForm();});
+function toggleTV(){document.body.classList.toggle("tv-mode");if(document.fullscreenElement){document.exitFullscreen?.();}else{document.documentElement.requestFullscreen?.().catch(()=>{});}showToast(document.body.classList.contains("tv-mode")?"TV display mode enabled.":"TV display mode disabled.");}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display="none",2800);}
+function updateClock(){const now=new Date();document.getElementById("clock").textContent=now.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});document.getElementById("footerYear").textContent="© "+now.getFullYear();}
+render();rotateNotices();updateClock();setInterval(updateClock,15000);setInterval(rotateNotices,8000);
+</script>
+</body>
+</html>
